@@ -1,3 +1,5 @@
+package data;
+
 public class Order {
     private final String name;
     private final String phone;

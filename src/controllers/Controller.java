@@ -1,3 +1,9 @@
+package controllers;
+
+import data.TableModel;
+import views.MainForm;
+import views.UserInteractionListener;
+
 public class Controller {
     private MainForm form;
     private TableModel tableModel;

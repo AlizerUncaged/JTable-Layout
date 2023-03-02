@@ -1,8 +1,7 @@
-import com.formdev.flatlaf.util.StringUtils;
+package data;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TableModel extends AbstractTableModel {
 

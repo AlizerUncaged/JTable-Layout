@@ -1,4 +1,7 @@
+package views;
+
 import com.formdev.flatlaf.util.StringUtils;
+import data.Order;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainForm extends JFrame {
+public class MainForm extends JFrame
+{
     private Container container;
 
     private GridBagConstraints constraints;
@@ -121,6 +125,12 @@ public class MainForm extends JFrame {
             button.addActionListener(userInteractionListener.getDeleteRowsButtonListener());
             panel.add(button);
         }
+        {
+            statusLabel = new JLabel();
+            statusLabel.setForeground(Color.CYAN);
+            statusLabel.setText("Status");
+            panel.add(statusLabel);
+        }
 
 
         container.add(panel, constraints);
@@ -130,6 +140,8 @@ public class MainForm extends JFrame {
     private JTextField nameField;
 
     private JTextField phoneField;
+
+    private JLabel statusLabel;
 
     private JTextField addressField;
 

@@ -1,4 +1,8 @@
+package views;
+
 import com.formdev.flatlaf.FlatDarculaLaf;
+import controllers.Controller;
+import data.TableModel;
 
 import javax.swing.*;
 

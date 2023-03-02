@@ -24,6 +24,19 @@ public class MainForm extends JFrame {
 
     private JFrame currentFrame = this;
 
+    private JTextField nameField;
+
+    private JTextField phoneField;
+
+    private JLabel statusLabel;
+
+    private JTextField addressField;
+
+    private ArrayList<String> toppings = new ArrayList<>();
+
+    private String size;
+
+    private String style;
     public MainForm() {
         constraints = new GridBagConstraints();
         constraints.gridy = 0;
@@ -187,21 +200,10 @@ public class MainForm extends JFrame {
         setUpdateMode(false, 0);
     }
 
-    private JTextField nameField;
-
-    private JTextField phoneField;
-
-    private JLabel statusLabel;
 
     public void setStatus(String status) {
         statusLabel.setText(status);
     }
-
-    private JTextField addressField;
-
-    private ArrayList<String> toppings = new ArrayList<>();
-    private String size;
-    private String style;
 
     void drawUi() {
 

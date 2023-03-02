@@ -4,6 +4,7 @@ import views.MainForm;
 import data.Order;
 import data.TableModel;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -27,7 +28,17 @@ public class NegativeButton implements ActionListener {
 
     void handleNormalMode() {
         // handle normal mode since this is the Delete button now
+
         var selectedRow = mainForm.getTable().getSelectedRows();
+
+        int res = JOptionPane.showConfirmDialog(mainForm, "Delete " + selectedRow.length + " rows?", "Confirm Delete Rows",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (res != JOptionPane.OK_OPTION)
+        {
+            return;
+        }
 
         if (selectedRow.length == 0)
             tableModel.removeRow(0);

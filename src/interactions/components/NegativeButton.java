@@ -21,6 +21,8 @@ public class NegativeButton implements ActionListener {
     void handleUpdateMode() {
         // disable update mode because this is the Cancel button now
         mainForm.setUpdateMode(false, 0);
+        mainForm.fillData(new Order());
+        mainForm.setStatus("");
     }
 
     void handleNormalMode() {
@@ -38,6 +40,7 @@ public class NegativeButton implements ActionListener {
                 tableModel.removeRow(i);
             }
         }
+        mainForm.setStatus("Removed " + selectedRow.length + " row" + (selectedRow.length == 1 ? "" : "s") + "!");
     }
 
     @Override

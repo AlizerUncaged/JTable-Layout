@@ -17,8 +17,8 @@ public class ControlledJTable extends JTable {
     @Override
     public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend)
     {
-      //  if (!_canSelect)
-        //    return;
+        if (!_canSelect)
+            return;
 
         super.changeSelection(rowIndex, columnIndex, toggle, extend);
     }

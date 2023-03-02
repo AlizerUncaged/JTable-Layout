@@ -61,6 +61,12 @@ public class TableModel extends AbstractTableModel {
         return orders.get(rowIndex);
     }
 
+    public void setOrderAt(Order order, int rowIndex)
+    {
+        orders.set(rowIndex, order);
+        this.fireTableDataChanged();
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         var selectedOrder = orders.get(rowIndex);

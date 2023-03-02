@@ -12,7 +12,10 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import static utilities.ToggleUtility.*;
+
 public class MainForm extends JFrame {
+
     private Container container;
 
     private GridBagConstraints constraints;
@@ -29,13 +32,14 @@ public class MainForm extends JFrame {
         container = this.getContentPane();
         container.setLayout(new GridBagLayout());
 
-
         pizzaData.put("Size", new String[]{
                 "Small", "Medium", "Large"
         });
+
         pizzaData.put("Style", new String[]{
                 "Thin", "Thick"
         });
+
         pizzaData.put("Toppings", new String[]{
                 "Pepperoni", "Mushroom", "Anchovies"
         });
@@ -58,8 +62,9 @@ public class MainForm extends JFrame {
         }
 
         this.setTitle("Pizza");
-        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
+        this.setLocationRelativeTo(null);
     }
 
     private JTable table;
@@ -85,58 +90,16 @@ public class MainForm extends JFrame {
         constraints.gridheight = 1;
     }
 
-    public String getActiveToggle(String groupName)
-    {
-        var buttonStates = getToggleButtonStates().get(groupName);
-        ArrayList<String> activeStyle = new ArrayList<String>();
-
-        for(int i = 0; i < buttonStates.size(); i++)
-        {
-            if (buttonStates.get(i))
-            {
-                activeStyle.add(pizzaData.get(groupName)[i]);
-            }
-        }
-
-        if (activeStyle.size() == 1)
-            return activeStyle.get(0);
-        else return  String.join(", ", activeStyle);
-    }
-
     public Order getOrderFromFields() {
 
         return new Order(
                 nameField.getText(),
                 phoneField.getText(),
                 addressField.getText(),
-                getActiveToggle("Style"),
-                getActiveToggle("Toppings"),
-                getActiveToggle("Size"),
-                getToggleButtonStates()
-                );
-    }
-
-    Map<String, ArrayList<Boolean>> getToggleButtonStates() {
-        Map<String, ArrayList<Boolean>> states = new Hashtable<>();
-        for (var i : toggleButtonsGroup.keySet()) {
-            ArrayList<Boolean> toggleState = new ArrayList<>();
-            for(var state : toggleButtonsGroup.get(i))
-            {
-                toggleState.add(state.isSelected());
-            }
-            states.put(i, toggleState);
-        }
-        return states;
-    }
-
-    public void setToggleButtonStates(Map<String, ArrayList<Boolean>> states)
-    {
-        for (var i : states.keySet()) {
-            for(int l = 0; l < toggleButtonsGroup.get(i).size(); l++)
-            {
-                toggleButtonsGroup.get(i).get(l).setSelected(states.get(i).get(l));
-            }
-        }
+                getActiveToggle("Style", toggleButtonsGroup, pizzaData),
+                getActiveToggle("Toppings", toggleButtonsGroup, pizzaData),
+                getActiveToggle("Size", toggleButtonsGroup, pizzaData),
+                getToggleButtonStates(toggleButtonsGroup));
     }
 
     public String validateFields() {
@@ -161,26 +124,23 @@ public class MainForm extends JFrame {
         addressField.setText(order.getAddress());
         phoneField.setText(order.getPhone());
 
-        if (!order.getToggleButtonsState().isEmpty()) {
-            setToggleButtonStates(order.getToggleButtonsState());
-        }
+        if (!order.getToggleButtonsState().isEmpty())
+            setToggleButtonStates( order.getToggleButtonsState(), toggleButtonsGroup);
+
     }
     public void setUpdateMode(boolean updateMode, int targetRow) {
         isUpdateModeEnabled = updateMode;
         var controlledTable = (ControlledJTable) table;
+        controlledTable.setSelectable(!updateMode);
         if (isUpdateModeEnabled) {
             this.setStatus("Copied row " + targetRow + "!");
-            controlledTable.setSelectable(false);
+            saveButton.setText("Update");
+            deleteButton.setText("Delete");
 
             fillData(((TableModel) table.getModel()).getOrderAt(targetRow));
-
-          /*  saveButton.setText("Update");
-            deleteButton.setText("Cancel");*/
-
         }
         else {
             this.setStatus("");
-            controlledTable.setSelectable(true);
             saveButton.setText("Save");
             deleteButton.setText("Delete");
         }

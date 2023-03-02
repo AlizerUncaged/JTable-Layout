@@ -11,6 +11,7 @@ public class TableModel extends AbstractTableModel {
 
     ArrayList<Order> orders = new ArrayList<>();
 
+
     public void addRow(Order order) {
         orders.add(order);
         this.fireTableDataChanged();
@@ -74,7 +75,7 @@ public class TableModel extends AbstractTableModel {
             case 3:
                 return selectedOrder.getSize();
             case 4:
-                return String.join(", ", selectedOrder.getToppings());
+                return selectedOrder.getToppings();
             case 5:
                 return selectedOrder.getStyle();
         }

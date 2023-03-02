@@ -1,17 +1,18 @@
-package interactions;
+package interactions.components;
 
+import data.Order;
 import data.TableModel;
 import views.MainForm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddRowButton implements ActionListener {
+public class IncrementButton implements ActionListener {
 
     private TableModel tableModel;
     private views.MainForm mainForm;
 
-    public AddRowButton(TableModel tableModel, MainForm mainForm) {
+    public IncrementButton(TableModel tableModel, MainForm mainForm) {
         this.tableModel = tableModel;
         this.mainForm = mainForm;
     }
@@ -19,5 +20,6 @@ public class AddRowButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         tableModel.addRow(mainForm.getOrderFromFields());
+        mainForm.fillData(new Order());
     }
 }

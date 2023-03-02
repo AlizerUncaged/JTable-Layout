@@ -2,16 +2,17 @@ package views;
 
 import com.formdev.flatlaf.util.StringUtils;
 import data.Order;
+import data.TableModel;
+import interactions.UserInteractionListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.Array;
+import java.util.*;
 
-public class MainForm extends JFrame
-{
+public class MainForm extends JFrame {
     private Container container;
 
     private GridBagConstraints constraints;
@@ -27,18 +28,26 @@ public class MainForm extends JFrame
 
         container = this.getContentPane();
         container.setLayout(new GridBagLayout());
+
+
+        pizzaData.put("Size", new String[]{
+                "Small", "Medium", "Large"
+        });
+        pizzaData.put("Style", new String[]{
+                "Thin", "Thick"
+        });
+        pizzaData.put("Toppings", new String[]{
+                "Pepperoni", "Mushroom", "Anchovies"
+        });
     }
 
-    public JTable getTable()
-    {
+    public JTable getTable() {
         return table;
     }
 
 
-
-    public void initializeComponents()
-    {
-        this.drawJTable();
+    public void initializeComponents(JTable table) {
+        this.drawJTable(table);
         this.drawUi();
         this.drawSelections();
         this.addControlButtons();
@@ -56,85 +65,166 @@ public class MainForm extends JFrame
     private JTable table;
 
 
-    void drawJTable() {
-        table = new JTable();
+    void drawJTable(JTable realTable) {
+        table = realTable;
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.addMouseListener(userInteractionListener.getTableMouseHandler());
+        var size = new Dimension(700, 100);
 
+        // table.setPreferredSize(size);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(700, 100));
+        scrollPane.setPreferredSize(size);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridheight = GridBagConstraints.REMAINDER;
-        constraints.fill = GridBagConstraints.VERTICAL;
+        constraints.fill = GridBagConstraints.BOTH;
 
         container.add(scrollPane, constraints);
 
         constraints.gridheight = 1;
     }
 
+    public String getActiveToggle(String groupName)
+    {
+        var buttonStates = getToggleButtonStates().get(groupName);
+        ArrayList<String> activeStyle = new ArrayList<String>();
+
+        for(int i = 0; i < buttonStates.size(); i++)
+        {
+            if (buttonStates.get(i))
+            {
+                activeStyle.add(pizzaData.get(groupName)[i]);
+            }
+        }
+
+        if (activeStyle.size() == 1)
+            return activeStyle.get(0);
+        else return  String.join(", ", activeStyle);
+    }
 
     public Order getOrderFromFields() {
+
         return new Order(
                 nameField.getText(),
                 phoneField.getText(),
                 addressField.getText(),
-                style, toppings.toArray(new String[0]),
-                size);
+                getActiveToggle("Style"),
+                getActiveToggle("Toppings"),
+                getActiveToggle("Size"),
+                getToggleButtonStates()
+                );
     }
-    public String validateFields()
-    {
 
-        if (StringUtils.isEmpty(nameField.getText()))
-        {
+    Map<String, ArrayList<Boolean>> getToggleButtonStates() {
+        Map<String, ArrayList<Boolean>> states = new Hashtable<>();
+        for (var i : toggleButtonsGroup.keySet()) {
+            ArrayList<Boolean> toggleState = new ArrayList<>();
+            for(var state : toggleButtonsGroup.get(i))
+            {
+                toggleState.add(state.isSelected());
+            }
+            states.put(i, toggleState);
+        }
+        return states;
+    }
+
+    public void setToggleButtonStates(Map<String, ArrayList<Boolean>> states)
+    {
+        for (var i : states.keySet()) {
+            for(int l = 0; l < toggleButtonsGroup.get(i).size(); l++)
+            {
+                toggleButtonsGroup.get(i).get(l).setSelected(states.get(i).get(l));
+            }
+        }
+    }
+
+    public String validateFields() {
+
+        if (StringUtils.isEmpty(nameField.getText())) {
             return "Please input a name!";
         }
 
-        if (StringUtils.isEmpty(addressField.getText()))
-        {
+        if (StringUtils.isEmpty(addressField.getText())) {
             return "Please input an address!";
         }
 
-        if (StringUtils.isEmpty(phoneField.getText()))
-        {
+        if (StringUtils.isEmpty(phoneField.getText())) {
             return "Please input your phone number!";
         }
 
         return null;
     }
 
+    public void fillData(Order order) {
+        nameField.setText(order.getName());
+        addressField.setText(order.getAddress());
+        phoneField.setText(order.getPhone());
+
+        if (!order.getToggleButtonsState().isEmpty()) {
+            setToggleButtonStates(order.getToggleButtonsState());
+        }
+    }
+    public void setUpdateMode(boolean updateMode, int targetRow) {
+        isUpdateModeEnabled = updateMode;
+        var controlledTable = (ControlledJTable) table;
+        if (isUpdateModeEnabled) {
+            this.setStatus("Copied row " + targetRow + "!");
+            controlledTable.setSelectable(false);
+
+            fillData(((TableModel) table.getModel()).getOrderAt(targetRow));
+
+          /*  saveButton.setText("Update");
+            deleteButton.setText("Cancel");*/
+
+        }
+        else {
+            this.setStatus("");
+            controlledTable.setSelectable(true);
+            saveButton.setText("Save");
+            deleteButton.setText("Delete");
+        }
+    }
+
+    private boolean isUpdateModeEnabled = false;
+
+    public boolean isUpdateMode() {
+        return isUpdateModeEnabled;
+    }
+    private JButton saveButton;
+
+    private JButton deleteButton;
+
     void addControlButtons() {
         constraints.gridx = 1;
         constraints.gridy = 2;
-        constraints.gridwidth = GridBagConstraints.HORIZONTAL;
-        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridwidth = 3;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridheight = 1;
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
         {
-            var button = new JButton();
-            button.setText("Save");
-            panel.add(button);
-            button.addActionListener(userInteractionListener.getAddRowButtonListener());
+            saveButton = new JButton();
+            panel.add(saveButton);
+            saveButton.addActionListener(userInteractionListener.getAddRowButtonListener());
         }
         {
-            var button = new JButton();
-            button.setText("Delete");
-            button.addActionListener(userInteractionListener.getDeleteRowsButtonListener());
-            panel.add(button);
+            deleteButton = new JButton();
+            deleteButton.addActionListener(userInteractionListener.getDeleteRowsButtonListener());
+            panel.add(deleteButton);
         }
         {
             statusLabel = new JLabel();
             statusLabel.setForeground(Color.CYAN);
-            statusLabel.setText("Status");
+            statusLabel.setText("");
             panel.add(statusLabel);
         }
 
-
         container.add(panel, constraints);
 
+        setUpdateMode(false, 0);
     }
 
     private JTextField nameField;
@@ -142,6 +232,10 @@ public class MainForm extends JFrame
     private JTextField phoneField;
 
     private JLabel statusLabel;
+
+    public void setStatus(String status) {
+        statusLabel.setText(status);
+    }
 
     private JTextField addressField;
 
@@ -165,26 +259,27 @@ public class MainForm extends JFrame
 
     }
 
+    private Map<String, String[]> pizzaData =
+            new HashMap<>();
+
     void drawSelections() {
         constraints.gridwidth = 1;
         constraints.gridx = 1;
         constraints.gridy = 1;
 
-        addSelection("Size", new String[]{
-                "Small", "Medium", "Large"
-        }, true);
 
-        addSelection("Style", new String[]{
-                "Thin", "Thick"
-        }, true);
+        addSelection("Size", pizzaData.get("Size"), true);
 
-        addSelection("Toppings", new String[]{
-                "Pepperoni", "Mushroom", "Anchovies"
-        }, false);
+        addSelection("Style", pizzaData.get("Style"), true);
+
+        addSelection("Toppings", pizzaData.get("Toppings"), false);
     }
 
-    void addSelection(String name, String[] radioButtons, boolean isRadioButton) {
+    public Map<String, ArrayList<JToggleButton>>
+            toggleButtonsGroup = new Hashtable<>();
 
+    void addSelection(String name, String[] radioButtons, boolean isRadioButton) {
+        ArrayList<JToggleButton> toggles = new ArrayList<>();
         var buttonGroup = new ButtonGroup();
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder(name));
@@ -202,11 +297,12 @@ public class MainForm extends JFrame
             JToggleButton selectionButton;
             if (isRadioButton)
                 selectionButton = new JRadioButton();
-             else
+            else
                 selectionButton = new JCheckBox();
 
+            toggles.add(selectionButton);
 
-            selectionButton.addActionListener(new ActionListener() {
+          /*  selectionButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     switch (name) {
@@ -229,7 +325,7 @@ public class MainForm extends JFrame
                             break;
                     }
                 }
-            });
+            });*/
 
             selectionButton.setText(i);
             panel.add(selectionButton, localPanelConstraints);
@@ -253,6 +349,8 @@ public class MainForm extends JFrame
 
             localPanelConstraints.gridy++;
         }
+
+        toggleButtonsGroup.put(name, toggles);
 
         constraints.gridx++;
     }

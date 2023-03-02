@@ -1,14 +1,30 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Order {
     private final String name;
     private final String phone;
     private final String address;
     private final String style;
-    private final String[] toppings;
+    private final String toppings;
     private final String size;
+    private Map<String, ArrayList<Boolean>> toggleButtonsState;
 
-    public Order(String name, String phone, String address, String style, String[] toppings, String size){
+    public Order()
+    {
+        this("", "", "", "", "", "", new HashMap<>());
+    }
+    public Order(String name,
+                 String phone,
+                 String address,
+                 String style,
+                 String toppings,
+                 String size,
+                 Map<String, ArrayList<Boolean>> toggleButtonsState){
 
         this.name = name;
         this.phone = phone;
@@ -16,6 +32,7 @@ public class Order {
         this.style = style;
         this.toppings = toppings;
         this.size = size;
+        this.toggleButtonsState = toggleButtonsState;
     }
 
     public String getName() {
@@ -34,12 +51,16 @@ public class Order {
         return style;
     }
 
-    public String[] getToppings() {
+    public String getToppings() {
         return toppings;
     }
 
     public String getSize() {
         return size;
+    }
+
+    public Map<String, ArrayList<Boolean>> getToggleButtonsState() {
+        return toggleButtonsState;
     }
 }
 /*

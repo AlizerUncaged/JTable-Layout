@@ -1,18 +1,22 @@
 package controllers;
 
 import data.TableModel;
+import views.ControlledJTable;
 import views.MainForm;
-import views.UserInteractionListener;
+import interactions.UserInteractionListener;
 
 public class Controller {
     private MainForm form;
+    private ControlledJTable controlledJTable;
     private TableModel tableModel;
 
     public Controller(MainForm mainForm,
                       TableModel tableModel,
-                      UserInteractionListener userInteractionListener)
+                      UserInteractionListener userInteractionListener,
+                      ControlledJTable controlledJTable)
     {
         this.form = mainForm;
+        this.controlledJTable = controlledJTable;
         this.form.setUserInteractionListener(userInteractionListener);
         this.tableModel = tableModel;
 
@@ -22,7 +26,7 @@ public class Controller {
     }
 
     public void start(){
-        form.initializeComponents();
+        form.initializeComponents(controlledJTable);
         form.getTable().setModel(tableModel);
         form.setVisible(true);
     }

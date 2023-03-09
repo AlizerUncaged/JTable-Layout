@@ -18,7 +18,7 @@ This is a Java Swing project that allows you to create and manage pizza orders w
 
 ## Architecture
 
-This project follows the Model-View-Controller (MVC) design pattern. 🎨 The `Pizza` class is the model, the `PizzaView` class is the view, and the `PizzaController` class is the controller.
+This project follows the Model-View-Controller (MVC) design pattern. 🎨 The `data` package contains the data handling, the `views` package is the view, and the `Controller.java` class is the controller.
 
 ## Dependencies
 

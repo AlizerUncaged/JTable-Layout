@@ -30,11 +30,3 @@ This project uses the following libraries:
 ## Contributing
 
 Want to add more features to the Pizza Order Management System? 🤔 Feel free to fork this repository and submit a pull request!
-
-## Acknowledgements
-
-Thanks to the following resources that helped me create this project:
-
--   [Java Swing Tutorial](https://docs.oracle.com/javase/tutorial/uiswing/index.html)
--   [Stack Overflow](https://stackoverflow.com/) for providing answers to my coding questions
--   🍕 Pizza for being so delicious!

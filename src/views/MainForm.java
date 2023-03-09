@@ -1,10 +1,8 @@
 package views;
 
 import com.formdev.flatlaf.util.StringUtils;
-import components.ControlButtons;
-import components.ControlledJTable;
-import components.FixedGridBagConstraints;
-import components.SelectionButtons;
+import components.*;
+import data.DataHandler;
 import data.Order;
 import data.TableModel;
 import interactions.UserInteractionListener;
@@ -17,8 +15,6 @@ import static utilities.ToggleUtility.*;
 
 public class MainForm extends JFrame {
 
-    public Map<String, ArrayList<JToggleButton>>
-            toggleButtonsGroup = new Hashtable<>();
 
     private Container container;
 
@@ -37,6 +33,13 @@ public class MainForm extends JFrame {
     private boolean isUpdateModeEnabled = false;
 
     private ControlButtons controlButtons;
+
+    public DataHandler getDataHandler() {
+        return dataHandler;
+    }
+
+    private DataHandler dataHandler;
+
     public MainForm() {
         constraints = new FixedGridBagConstraints();
         constraints.gridy = 0;
@@ -44,25 +47,23 @@ public class MainForm extends JFrame {
 
         container = this.getContentPane();
         container.setLayout(new GridBagLayout());
+    }
 
-        pizzaData.put("Size", new String[]{
-                "Small", "Medium", "Large"
-        });
+    public JTextField getNameField() {
+        return nameField;
+    }
 
-        pizzaData.put("Style", new String[]{
-                "Thin", "Thick"
-        });
+    public JTextField getPhoneField() {
+        return phoneField;
+    }
 
-        pizzaData.put("Toppings", new String[]{
-                "Pepperoni", "Mushroom", "Anchovies"
-        });
+    public JTextField getAddressField() {
+        return addressField;
     }
 
     public ControlledJTable getTable() {
-
         return table;
     }
-
 
     public void initializeComponents(ControlledJTable table) {
         this.drawJTable(table);
@@ -81,10 +82,10 @@ public class MainForm extends JFrame {
     }
 
     void drawJTable(ControlledJTable realTable) {
-        var size = new Dimension(700, 100);
         table = realTable;
 
-        // table.setPreferredSize(size);
+        var size = new Dimension(700, 100);
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(size);
 
@@ -96,49 +97,10 @@ public class MainForm extends JFrame {
         container.add(scrollPane, constraints);
 
         constraints = constraints.setGridHeight(1);
+
+        table.setUserInteractionsListener(this.userInteractionListener);
     }
 
-    public Order getOrderFromFields() {
-        return new Order(
-                nameField.getText(),
-                phoneField.getText(),
-                addressField.getText(),
-                getActiveToggle("Style", toggleButtonsGroup, pizzaData),
-                getActiveToggle("Toppings", toggleButtonsGroup, pizzaData),
-                getActiveToggle("Size", toggleButtonsGroup, pizzaData),
-                getToggleButtonStates(toggleButtonsGroup));
-    }
-
-    public String validateFields() {
-
-        if (StringUtils.isEmpty(nameField.getText())) {
-            return "Please input a name!";
-        }
-
-        if (StringUtils.isEmpty(addressField.getText())) {
-            return "Please input an address!";
-        }
-
-        if (StringUtils.isEmpty(phoneField.getText())) {
-            return "Please input your phone number!";
-        }
-
-        return null;
-    }
-
-    public void fillData(Order order) {
-        nameField.setText(order.getName());
-        addressField.setText(order.getAddress());
-        phoneField.setText(order.getPhone());
-
-        if (!order.getToggleButtonsState().isEmpty())
-            setToggleButtonStates(order.getToggleButtonsState(), toggleButtonsGroup);
-        else {
-            // Generate empty toggles.
-            var toggles = setToggleButtonStates(toggleButtonsGroup, false);
-            setToggleButtonStates(toggles, toggleButtonsGroup);
-        }
-    }
     public void setUpdateMode(boolean updateMode, int targetRow) {
         isUpdateModeEnabled = updateMode;
         var controlledTable = (ControlledJTable) table;
@@ -148,7 +110,7 @@ public class MainForm extends JFrame {
             controlButtons.getSaveButton().setText("Update");
             controlButtons.getDeleteButton().setText("Cancel");
 
-            fillData(((TableModel) table.getModel()).getOrderAt(targetRow));
+            this.dataHandler.fillData(((TableModel) table.getModel()).getOrderAt(targetRow));
 
             controlButtons.setStatus("Editing row " + targetRow + "!");
         }
@@ -165,7 +127,6 @@ public class MainForm extends JFrame {
 
     void addControlButtons() {
         constraints = constraints.setConstraints(1,2,3,1,GridBagConstraints.HORIZONTAL);
-
         controlButtons = new ControlButtons(userInteractionListener);
         container.add(controlButtons, constraints);
         setUpdateMode(false, 0);
@@ -186,51 +147,36 @@ public class MainForm extends JFrame {
         container.add(panel, constraints);
     }
 
-    private Map<String, String[]> pizzaData =
-            new HashMap<>();
-
     void drawSelections() {
         constraints = constraints.setGridWidth(1)
+                .setGridFill(GridBagConstraints.BOTH)
                 .setGridY(1)
                 .setGridY(1);
 
-        addSelection("Size", pizzaData.get("Size"), true);
-
-        addSelection("Style", pizzaData.get("Style"), true);
-
-        addSelection("Toppings", pizzaData.get("Toppings"), false);
+        addSelection("Size", getDataHandler().getPizzaData().get("Size"), true);
+        addSelection("Style", getDataHandler().getPizzaData().get("Style"), true);
+        addSelection("Toppings", getDataHandler().getPizzaData().get("Toppings"), false);
     }
 
 
     void addSelection(String name, String[] radioButtons, boolean isRadioButton) {
         var selectionButtons = new SelectionButtons(name, radioButtons, isRadioButton);
         container.add(selectionButtons, constraints);
-        toggleButtonsGroup.put(name, selectionButtons.getGeneratedToggleButtons());
+        this.getDataHandler().getToggleButtonsGroup().put(name, selectionButtons.getGeneratedToggleButtons());
         constraints.gridx++;
     }
 
     public JTextField createField(String name, JPanel panel) {
-        var flowLayout = new FlowLayout();
-        var localHorizontalPanel = new JPanel();
-        localHorizontalPanel.setLayout(flowLayout);
-        localHorizontalPanel.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
-        localHorizontalPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
-        constraints.fill = GridBagConstraints.BOTH;
-        JLabel label = new JLabel();
-        label.setText(name);
-        label.setPreferredSize(new Dimension(75, 10));
-        localHorizontalPanel.add(label, constraints);
-        JTextField textField = new JTextField();
-        textField.setColumns(15);
-        localHorizontalPanel.add(textField, constraints);
-        panel.add(localHorizontalPanel);
-
-        return textField;
+        var labelAndInput = new LabelAndInput(name);
+        panel.add(labelAndInput);
+        return labelAndInput.getTextField();
     }
 
     public void setUserInteractionListener(UserInteractionListener userInteractionListener) {
         this.userInteractionListener = userInteractionListener;
-        this.table.setUserInteractionsListener(this.userInteractionListener);
+    }
+
+    public void setDataHandler(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
     }
 }

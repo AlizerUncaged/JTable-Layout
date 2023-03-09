@@ -21,13 +21,11 @@ public class TableModel extends AbstractTableModel {
     public void removeRow(int rowIndex){
         orders.remove(rowIndex);
         this.fireTableDataChanged();
-        // this.fireTableCellUpdated(orders.size() - 1, orders.size() - 1);
     }
 
     public void removeRow(Order order){
         orders.remove(order);
         this.fireTableDataChanged();
-        // this.fireTableCellUpdated(orders.size() - 1, orders.size() - 1);
     }
 
     /**

@@ -3,6 +3,7 @@ package views;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import components.ControlledJTable;
 import controllers.Controller;
+import data.DataHandler;
 import data.TableModel;
 import interactions.UserInteractionListener;
 
@@ -20,12 +21,14 @@ public class Main {
         var controlledJTable = new ControlledJTable();
         var form = new MainForm();
         var userInteractionListener = new UserInteractionListener();
+        var dataHandler = new DataHandler();
 
         new Controller(
                 form,
                 tableModel,
                 userInteractionListener,
-                controlledJTable
+                controlledJTable,
+                dataHandler
         ).start();
     }
 }

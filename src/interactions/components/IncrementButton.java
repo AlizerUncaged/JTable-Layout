@@ -27,7 +27,7 @@ public class IncrementButton implements ActionListener {
 
     void handleAdd(Order order)
     {
-        String validationResult = mainForm.validateFields();
+        String validationResult = mainForm.getDataHandler().validateFields();
         if (validationResult != null) {
             JOptionPane.showMessageDialog(mainForm,
                     validationResult,
@@ -38,12 +38,12 @@ public class IncrementButton implements ActionListener {
 
         tableModel.addRow(order);
 
-        mainForm.fillData(new Order());
+        mainForm.getDataHandler().fillData(new Order());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        var order = mainForm.getOrderFromFields();
+        var order = mainForm.getDataHandler().getOrderFromFields();
         if (mainForm.isUpdateMode()) {
             handleUpdate(order);
         } else {

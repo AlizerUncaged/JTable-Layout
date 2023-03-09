@@ -29,7 +29,7 @@ public class JTableMouseEvents implements MouseListener {
 
             if (form.isUpdateMode()) {
                 // If from update mode, clear the order fields.
-                form.fillData(new Order());
+                form.getDataHandler().fillData(new Order());
             }
 
             form.setUpdateMode(false, 0);

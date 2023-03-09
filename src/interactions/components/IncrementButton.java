@@ -43,6 +43,7 @@ public class IncrementButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         var order = mainForm.getDataHandler().getOrderFromFields();
+
         if (mainForm.isUpdateMode()) {
             handleUpdate(order);
         } else {

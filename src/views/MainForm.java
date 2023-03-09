@@ -163,7 +163,9 @@ public class MainForm extends JFrame {
     void addSelection(String name, String[] radioButtons, boolean isRadioButton) {
         var selectionButtons = new SelectionButtons(name, radioButtons, isRadioButton);
         container.add(selectionButtons, constraints);
+
         this.getDataHandler().getToggleButtonsGroup().put(name, selectionButtons.getGeneratedToggleButtons());
+        this.getDataHandler().getToggleButtonGroup().put(name, selectionButtons.getButtonGroup());
         constraints.gridx++;
     }
 

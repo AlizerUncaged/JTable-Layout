@@ -46,17 +46,13 @@ public class ToggleUtility {
 
 
 
-    public static  Map<String, ArrayList<Boolean>> setToggleButtonStates(Map<String, ArrayList<JToggleButton>> toggleButtonsGroup, boolean value) {
-        Map<String, ArrayList<Boolean>> states = new Hashtable<>();
+    public static void setToggleButtonStates(Map<String, ArrayList<JToggleButton>> toggleButtonsGroup,
+                                                                         boolean value) {
         for (var i : toggleButtonsGroup.keySet()) {
-            ArrayList<Boolean> toggleState = new ArrayList<>();
-            for(var state : toggleButtonsGroup.get(i))
-            {
-                toggleState.add(value);
+            for(var state : toggleButtonsGroup.get(i)) {
+                    state.setSelected(value);
             }
-            states.put(i, toggleState);
         }
-        return states;
     }
 
     public static  Map<String, ArrayList<Boolean>> getToggleButtonStates(Map<String, ArrayList<JToggleButton>> toggleButtonsGroup) {

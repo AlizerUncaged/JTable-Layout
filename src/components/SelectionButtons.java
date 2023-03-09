@@ -10,17 +10,23 @@ public class SelectionButtons  extends JPanel {
      */
     private ArrayList<JToggleButton> generatedToggleButtons;
 
+    public ButtonGroup getButtonGroup() {
+        return buttonGroup;
+    }
+
+    private ButtonGroup buttonGroup;
+
     /**
      * Constructs a new SelectionButtons object with the specified name, radio buttons, and type.
-     * @param name the name of the panel, which will be displayed as a titled border
-     * @param radioButtons an array of strings representing the text for each button
+     *
+     * @param name          the name of the panel, which will be displayed as a titled border
+     * @param radioButtons  an array of strings representing the text for each button
      * @param isRadioButton a boolean that determines whether the buttons will be radio buttons or check boxes
      */
-    public SelectionButtons(String name, String[] radioButtons, boolean isRadioButton)
-    {
+    public SelectionButtons(String name, String[] radioButtons, boolean isRadioButton) {
         generatedToggleButtons = new ArrayList<>();
 
-        var buttonGroup = new ButtonGroup();
+        buttonGroup = new ButtonGroup();
         this.setBorder(BorderFactory.createTitledBorder(name));
         this.setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(100, 200));
@@ -52,10 +58,10 @@ public class SelectionButtons  extends JPanel {
 
     /**
      * Returns an ArrayList of all the generated JToggleButtons.
+     *
      * @return an ArrayList of all the generated JToggleButtons
      */
     public ArrayList<JToggleButton> getGeneratedToggleButtons() {
         return generatedToggleButtons;
     }
-
 }

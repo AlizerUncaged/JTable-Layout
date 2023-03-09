@@ -25,6 +25,13 @@ public class DataHandler {
     private Map<String, ArrayList<JToggleButton>>
             toggleButtonsGroup;
 
+    public Map<String, ButtonGroup> getToggleButtonGroup() {
+        return toggleButtonGroup;
+    }
+
+    private Map<String, ButtonGroup>
+            toggleButtonGroup;
+
 
     private Map<String, String[]> pizzaData;
 
@@ -32,6 +39,8 @@ public class DataHandler {
 
     public DataHandler() {
         toggleButtonsGroup = new Hashtable<>();
+        toggleButtonGroup = new HashMap<>();
+
         pizzaData = new HashMap<>();
         pizzaData.put("Size", new String[]{
                 "Small", "Medium", "Large"
@@ -73,8 +82,10 @@ public class DataHandler {
             setToggleButtonStates(order.getToggleButtonsState(), toggleButtonsGroup);
         else {
             // Generate empty toggles.
-            var toggles = setToggleButtonStates(toggleButtonsGroup, false);
-            setToggleButtonStates(toggles, toggleButtonsGroup);
+            setToggleButtonStates(toggleButtonsGroup, false);
+
+            for(var i : toggleButtonGroup.values())
+                i.clearSelection();
         }
     }
 

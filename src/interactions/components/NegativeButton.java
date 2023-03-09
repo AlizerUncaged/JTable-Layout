@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class NegativeButton implements ActionListener {
 
     private TableModel tableModel;
+
     private MainForm mainForm;
 
     public NegativeButton(TableModel tableModel, MainForm mainForm) {
@@ -23,7 +24,7 @@ public class NegativeButton implements ActionListener {
         // disable update mode because this is the Cancel button now
         mainForm.setUpdateMode(false, 0);
         mainForm.fillData(new Order());
-        mainForm.setStatus("");
+        mainForm.getControlButtons().setStatus("");
     }
 
     void handleNormalMode() {
@@ -51,7 +52,8 @@ public class NegativeButton implements ActionListener {
                 tableModel.removeRow(i);
             }
         }
-        mainForm.setStatus("Removed " + selectedRow.length + " row" + (selectedRow.length == 1 ? "" : "s") + "!");
+
+        mainForm.getControlButtons().setStatus("Removed " + selectedRow.length + " row" + (selectedRow.length == 1 ? "" : "s") + "!");
     }
 
     @Override

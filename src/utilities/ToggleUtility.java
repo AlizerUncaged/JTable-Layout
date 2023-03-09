@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class ToggleUtility {
 
-    public static void setToggleButtonStates(  Map<String, ArrayList<Boolean>> states,
+    public static void setToggleButtonStates(Map<String, ArrayList<Boolean>> states,
                                              Map<String, ArrayList<JToggleButton>> toggleButtonsGroup)
     {
         for (var i : states.keySet()) {
@@ -44,6 +44,20 @@ public class ToggleUtility {
     }
 
 
+
+
+    public static  Map<String, ArrayList<Boolean>> setToggleButtonStates(Map<String, ArrayList<JToggleButton>> toggleButtonsGroup, boolean value) {
+        Map<String, ArrayList<Boolean>> states = new Hashtable<>();
+        for (var i : toggleButtonsGroup.keySet()) {
+            ArrayList<Boolean> toggleState = new ArrayList<>();
+            for(var state : toggleButtonsGroup.get(i))
+            {
+                toggleState.add(value);
+            }
+            states.put(i, toggleState);
+        }
+        return states;
+    }
 
     public static  Map<String, ArrayList<Boolean>> getToggleButtonStates(Map<String, ArrayList<JToggleButton>> toggleButtonsGroup) {
         Map<String, ArrayList<Boolean>> states = new Hashtable<>();

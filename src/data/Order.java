@@ -18,6 +18,7 @@ public class Order {
     {
         this("", "", "", "", "", "", new HashMap<>());
     }
+
     public Order(String name,
                  String phone,
                  String address,
@@ -34,6 +35,7 @@ public class Order {
         this.size = size;
         this.toggleButtonsState = toggleButtonsState;
     }
+
 
     public String getName() {
         return name;

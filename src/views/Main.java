@@ -1,6 +1,7 @@
 package views;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
+import components.ControlledJTable;
 import controllers.Controller;
 import data.TableModel;
 import interactions.UserInteractionListener;

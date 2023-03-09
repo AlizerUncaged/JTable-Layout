@@ -1,9 +1,9 @@
 package interactions;
 
-import views.ControlledJTable;
+import data.Order;
+import components.ControlledJTable;
 import views.MainForm;
 
-import javax.swing.*;
 import java.awt.event.*;
 
 public class JTableMouseEvents implements MouseListener {
@@ -24,10 +24,17 @@ public class JTableMouseEvents implements MouseListener {
     public void mousePressed(MouseEvent e) {
         // check double click
         var formTable = ((ControlledJTable) form.getTable());
+        var selectedRow = form.getTable().rowAtPoint(e.getPoint());
+        if (e.getClickCount() == 1) {
 
-        if (e.getClickCount() == 1)
-        {
+            if (form.isUpdateMode()) {
+                // If from update mode, clear the order fields.
+                form.fillData(new Order());
+            }
+
             form.setUpdateMode(false, 0);
+            // Reselect the row again.
+            formTable.changeSelection(selectedRow, 0, false,false);
         }
 
         if (e.getClickCount() == 2 && formTable.canSelect()) {

@@ -21,6 +21,8 @@ public class IncrementButton implements ActionListener {
     void handleUpdate(Order order)
     {
         tableModel.setOrderAt(order, mainForm.getTable().getSelectedRow());
+        // Disable update mode.
+        mainForm.setUpdateMode(false, 0);
     }
 
     void handleAdd(Order order)

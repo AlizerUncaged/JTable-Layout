@@ -1,7 +1,7 @@
 package controllers;
 
 import data.TableModel;
-import views.ControlledJTable;
+import components.ControlledJTable;
 import views.MainForm;
 import interactions.UserInteractionListener;
 

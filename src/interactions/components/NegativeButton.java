@@ -32,9 +32,20 @@ public class NegativeButton implements ActionListener {
 
         var selectedRow = mainForm.getTable().getSelectedRows();
 
-        int res = JOptionPane.showConfirmDialog(mainForm, "Delete " + selectedRow.length + " rows?", "Confirm Delete Rows",
+        if (selectedRow.length == 0)
+        {
+            JOptionPane.showConfirmDialog(mainForm, "No rows selected!",
+                "No rows selected!",
+                JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int res = JOptionPane.showConfirmDialog(mainForm, "Delete " + selectedRow.length +
+                        " row" + (selectedRow.length == 1 ? "" : "s") + "?",
+                "Confirm Delete Rows",
                 JOptionPane.YES_NO_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.QUESTION_MESSAGE);
 
         if (res != JOptionPane.OK_OPTION)
         {

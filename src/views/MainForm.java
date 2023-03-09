@@ -72,6 +72,7 @@ public class MainForm extends JFrame {
         this.addControlButtons();
         this.setIconImage(new ImageIcon(ClassLoader.getSystemResource("Untitled.png   ")).getImage());
         this.setTitle("Pizza");
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setLocationRelativeTo(null);

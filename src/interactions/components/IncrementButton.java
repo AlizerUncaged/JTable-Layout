@@ -38,7 +38,6 @@ public class IncrementButton implements ActionListener {
 
         tableModel.addRow(order);
 
-        mainForm.getDataHandler().fillData(new Order());
     }
 
     @Override
@@ -49,6 +48,8 @@ public class IncrementButton implements ActionListener {
         } else {
             handleAdd(order);
         }
-        // mainForm.setStatus("Added order from " + order.getName() + "!");
+
+        // Always clear.
+        mainForm.getDataHandler().fillData(new Order());
     }
 }

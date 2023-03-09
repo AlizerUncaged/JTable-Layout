@@ -27,20 +27,16 @@ public class ToggleUtility {
                                          Map<String, ArrayList<JToggleButton>> toggleButtonsGroup,
                                          Map<String, String[]> pizzaData)
     {
-        var buttonStates = getToggleButtonStates(toggleButtonsGroup).get(groupName);
         ArrayList<String> activeStyle = new ArrayList<String>();
+        var buttonStates = getToggleButtonStates(toggleButtonsGroup).get(groupName);
 
         for(int i = 0; i < buttonStates.size(); i++)
-        {
             if (buttonStates.get(i))
-            {
                 activeStyle.add(pizzaData.get(groupName)[i]);
-            }
-        }
 
         if (activeStyle.size() == 1)
             return activeStyle.get(0);
-        else return  String.join(", ", activeStyle);
+        else return String.join(", ", activeStyle);
     }
 
 

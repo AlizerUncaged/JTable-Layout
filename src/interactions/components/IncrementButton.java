@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class IncrementButton implements ActionListener {
 
     private TableModel tableModel;
+
     private views.MainForm mainForm;
 
     public IncrementButton(TableModel tableModel, MainForm mainForm) {

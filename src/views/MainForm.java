@@ -104,14 +104,13 @@ public class MainForm extends JFrame {
 
     public void setUpdateMode(boolean updateMode, int targetRow) {
         isUpdateModeEnabled = updateMode;
-        var controlledTable = (ControlledJTable) table;
-        controlledTable.setSelectable(!updateMode);
+        table.setSelectable(!updateMode);
 
         if (isUpdateModeEnabled) {
             controlButtons.getSaveButton().setText("Update");
             controlButtons.getDeleteButton().setText("Cancel");
 
-            this.dataHandler.fillData(((TableModel) table.getModel()).getOrderAt(targetRow));
+            this.dataHandler.fillData(table.getTableModel().getOrderAt(targetRow));
 
             controlButtons.setStatus("Editing row " + targetRow + "!");
         }

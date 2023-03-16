@@ -1,7 +1,11 @@
 package components;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.text.ParseException;
 
 /**
  * Represents a label and text field component that can be used in Swing user interfaces.
@@ -9,9 +13,13 @@ import java.awt.*;
 public class LabelAndInput extends JPanel {
 
     private FlowLayout flowLayout;
-    private JLabel label;
-    private JTextField textField;
+
+    private BoxLayout verticalFlow;
+    private JLabel label, statusLabel;
+    private JPanel innerPanel;
+    private JFormattedTextField textField;
     private String name;
+    private MaskFormatter formatter;
 
     /**
      * Gets the label component.
@@ -27,8 +35,22 @@ public class LabelAndInput extends JPanel {
      *
      * @return the text field component
      */
-    public JTextField getTextField() {
+    public JFormattedTextField getTextField() {
         return textField;
+    }
+
+    public String getActualText() {
+
+        try {
+            textField.commitEdit();
+        } catch (ParseException e) {
+            return null;
+        }
+
+        return textField.getFormatter() == null ? textField.getText() : textField.getValue().toString();
+    }
+    public void setText(String t) {
+        textField.setText(t);
     }
 
     /**
@@ -36,21 +58,35 @@ public class LabelAndInput extends JPanel {
      *
      * @param name the name for the label component
      */
-    public LabelAndInput(String name) {
+    public LabelAndInput(String name, MaskFormatter formatter) {
         this.name = name;
+        this.formatter = formatter;
 
         // Create a new label and flow layout for the panel
+        innerPanel = new JPanel();
+        innerPanel.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+        add(innerPanel);
+
         label = new JLabel();
+        statusLabel = new JLabel("", SwingConstants.LEFT);
         flowLayout = new FlowLayout();
+        verticalFlow = new BoxLayout(this, BoxLayout.Y_AXIS);
+
+        innerPanel.setLayout(flowLayout);
 
         // Set the layout, alignment, and component orientation of the panel
-        setLayout(flowLayout);
-        setAlignmentX(JPanel.RIGHT_ALIGNMENT);
+        setLayout(verticalFlow);
         setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        setAlignmentX(JPanel.LEFT_ALIGNMENT);
 
         // Render the label and text field components
         renderLabel();
         renderField();
+        renderStatusLabel();
+    }
+
+    public MaskFormatter getFormatter() {
+        return formatter;
     }
 
     /**
@@ -58,10 +94,11 @@ public class LabelAndInput extends JPanel {
      */
     void renderField() {
         // Create a new text field and set its size
-        textField = new JTextField();
+        textField = new JFormattedTextField(formatter);
+        textField.setFocusLostBehavior(JFormattedTextField.COMMIT);
         textField.setColumns(15);
         // Add the text field to the panel
-        add(textField);
+        innerPanel.add(textField);
     }
 
     /**
@@ -72,6 +109,23 @@ public class LabelAndInput extends JPanel {
         label.setText(name);
         label.setPreferredSize(new Dimension(75, 10));
         // Add the label to the panel
-        add(label);
+        innerPanel.add(label);
+    }
+
+    public void setStatus(String t){
+        statusLabel.setText(t);
+    }
+
+    /**
+     * Renders the label component and adds it to the panel.
+     */
+    void renderStatusLabel() {
+        // Set the text of the label to the provided name and set its size
+        statusLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+        statusLabel.setBorder(new CompoundBorder(this.getBorder(), new EmptyBorder(0,20,0,0)));
+        statusLabel.setForeground(new Color(231, 76, 60));
+        statusLabel.setText(" ");
+        // Add the label to the panel
+        this.add(statusLabel);
     }
 }

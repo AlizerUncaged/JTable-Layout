@@ -10,11 +10,29 @@ public class SelectionButtons  extends JPanel {
      */
     private ArrayList<JToggleButton> generatedToggleButtons;
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    private String name;
+    private int requiredChecked;
+
     public ButtonGroup getButtonGroup() {
         return buttonGroup;
     }
 
     private ButtonGroup buttonGroup;
+
+
+    public int checkedCount() {
+        int count = 0;
+        for (var i : generatedToggleButtons) {
+            if (i.isSelected())
+                count++;
+        }
+        return count;
+    }
 
     /**
      * Constructs a new SelectionButtons object with the specified name, radio buttons, and type.
@@ -23,7 +41,9 @@ public class SelectionButtons  extends JPanel {
      * @param radioButtons  an array of strings representing the text for each button
      * @param isRadioButton a boolean that determines whether the buttons will be radio buttons or check boxes
      */
-    public SelectionButtons(String name, String[] radioButtons, boolean isRadioButton) {
+    public SelectionButtons(String name, String[] radioButtons, boolean isRadioButton, int requiredChecked) {
+        this.name = name;
+        this.requiredChecked = requiredChecked;
         generatedToggleButtons = new ArrayList<>();
 
         buttonGroup = new ButtonGroup();
@@ -63,5 +83,9 @@ public class SelectionButtons  extends JPanel {
      */
     public ArrayList<JToggleButton> getGeneratedToggleButtons() {
         return generatedToggleButtons;
+    }
+
+    public int getRequiredChecked() {
+        return requiredChecked;
     }
 }

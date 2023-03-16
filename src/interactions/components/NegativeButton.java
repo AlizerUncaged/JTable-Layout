@@ -69,6 +69,7 @@ public class NegativeButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainForm.clearValidationErrors();
         if (mainForm.isUpdateMode()) {
             handleUpdateMode();
         } else {

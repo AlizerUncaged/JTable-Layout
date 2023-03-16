@@ -3,6 +3,7 @@ package controllers;
 import data.DataHandler;
 import data.TableModel;
 import components.ControlledJTable;
+import interactions.Formatters;
 import views.MainForm;
 import interactions.UserInteractionListener;
 
@@ -19,6 +20,7 @@ public class Controller {
     private ControlledJTable controlledJTable;
     private DataHandler dataHandler;
     private TableModel tableModel;
+    private Formatters formatters;
 
     /**
      * Constructs a new Controller object with the given MainForm, TableModel, UserInteractionListener, ControlledJTable, and DataHandler.
@@ -28,16 +30,19 @@ public class Controller {
                       TableModel tableModel,
                       UserInteractionListener userInteractionListener,
                       ControlledJTable controlledJTable,
-                      DataHandler dataHandler)
+                      DataHandler dataHandler,
+                      Formatters formatters)
     {
         this.form = mainForm;
         this.controlledJTable = controlledJTable;
         this.dataHandler = dataHandler;
         this.tableModel = tableModel;
+        this.formatters = formatters;
 
         // Set up connections between components
         dataHandler.setMainForm(this.form);
         mainForm.setDataHandler(this.dataHandler);
+        mainForm.setFormatter(this.formatters);
         mainForm.setUserInteractionListener(userInteractionListener);
         userInteractionListener.setMainForm(this.form);
         userInteractionListener.setTableModel(this.tableModel);

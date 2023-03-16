@@ -28,12 +28,14 @@ public class IncrementButton implements ActionListener {
 
     void handleAdd(Order order)
     {
-        String validationResult = mainForm.getDataHandler().validateFields();
-        if (validationResult != null) {
-            JOptionPane.showMessageDialog(mainForm,
+        var validationResult = mainForm.getDataHandler().validateFields();
+        if (!validationResult) {
+       /*     JOptionPane.showMessageDialog(mainForm,
                     validationResult,
                     "Validation Error!",
                     JOptionPane.ERROR_MESSAGE);
+
+        */
             return;
         }
 
@@ -43,6 +45,7 @@ public class IncrementButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        mainForm.clearValidationErrors();
         var order = mainForm.getDataHandler().getOrderFromFields();
 
         if (mainForm.isUpdateMode()) {

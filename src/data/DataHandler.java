@@ -4,6 +4,7 @@ import com.formdev.flatlaf.util.StringUtils;
 import views.MainForm;
 
 import javax.swing.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -56,21 +57,33 @@ public class DataHandler {
     }
 
 
-    public String validateFields() {
+    public boolean validateFields() {
 
-        if (StringUtils.isEmpty(this.form.getNameField().getText())) {
-            return "Please input a name!";
+        if (StringUtils.isEmpty(this.form.getNameField().getActualText())) {
+            form.getFieldGroup("Name").setStatus("Name can't be empty!");
+            return false;
         }
 
-        if (StringUtils.isEmpty(this.form.getAddressField().getText())) {
-            return "Please input an address!";
+        if (StringUtils.isEmpty(this.form.getAddressField().getActualText())) {
+            form.getFieldGroup("Address").setStatus("Address can't be empty!");
+            return false;
         }
 
-        if (StringUtils.isEmpty(this.form.getPhoneField().getText())) {
-            return "Please input your phone number!";
+        if (StringUtils.isEmpty(this.form.getPhoneField().getActualText())) {
+            form.getFieldGroup("Phone").setStatus("Phone number cannot be empty!");
+            return false;
         }
 
-        return null;
+        for (var i : form.getSelectionButtons()) {
+            if (i.checkedCount() < i.getRequiredChecked())
+            {
+                form.getFieldGroup("Address").setStatus("You need at least " + i.checkedCount() + " selected " + i.getName().toLowerCase() + "!");
+                return false;
+            }
+        }
+
+
+        return true;
     }
 
     public void fillData(Order order) {
@@ -89,15 +102,17 @@ public class DataHandler {
         }
     }
 
+
     public void setMainForm(MainForm form) {
         this.form = form;
     }
 
     public Order getOrderFromFields() {
+
         return new Order(
-                this.form.getNameField().getText(),
-                this.form.getPhoneField().getText(),
-                this.form.getAddressField().getText(),
+                this.form.getNameField().getActualText(),
+                this.form.getPhoneField().getActualText(),
+                this.form.getAddressField().getActualText(),
                 getActiveToggle("Style", toggleButtonsGroup, pizzaData),
                 getActiveToggle("Toppings", toggleButtonsGroup, pizzaData),
                 getActiveToggle("Size", toggleButtonsGroup, pizzaData),

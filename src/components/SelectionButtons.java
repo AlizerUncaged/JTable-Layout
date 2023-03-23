@@ -1,5 +1,7 @@
 package components;
 
+import interactions.RadioButtonValidationListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class SelectionButtons  extends JPanel {
         return count;
     }
 
+    private JLabel statusLabel;
+
     /**
      * Constructs a new SelectionButtons object with the specified name, radio buttons, and type.
      *
@@ -43,12 +47,16 @@ public class SelectionButtons  extends JPanel {
      */
     public SelectionButtons(String name, String[] radioButtons, boolean isRadioButton, int requiredChecked) {
         this.name = name;
+
+        this.statusLabel = new JLabel();
+        this.statusLabel.setForeground(new Color(231, 76, 60));
+
         this.requiredChecked = requiredChecked;
         generatedToggleButtons = new ArrayList<>();
 
         buttonGroup = new ButtonGroup();
         this.setBorder(BorderFactory.createTitledBorder(name));
-        this.setLayout(new GridBagLayout());
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(100, 200));
 
         var localPanelConstraints = new GridBagConstraints();
@@ -66,7 +74,9 @@ public class SelectionButtons  extends JPanel {
 
             generatedToggleButtons.add(selectionButton);
 
+            selectionButton.setAlignmentY(Component.CENTER_ALIGNMENT);
             selectionButton.setText(i);
+
             this.add(selectionButton, localPanelConstraints);
 
             if (isRadioButton)
@@ -74,6 +84,19 @@ public class SelectionButtons  extends JPanel {
 
             localPanelConstraints.gridy++;
         }
+
+        // Add validator.
+        var radioButtonValidation =
+                new RadioButtonValidationListener(this, requiredChecked);
+
+
+        this.statusLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        this.add(this.statusLabel);
+    }
+
+    public void setStatus(String message)
+    {
+        statusLabel.setText(message);
     }
 
     /**

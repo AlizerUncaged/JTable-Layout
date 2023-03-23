@@ -133,9 +133,9 @@ public class MainForm extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        createField("Name:", panel);
-        createField("Phone:", panel);
-        createField("Address:", panel);
+        createField("Name:", panel, "Name cannot be empty!");
+        createField("Phone:", panel, "Phone Number invalid!");
+        createField("Address:", panel, "Address cannot be empty!");
 
         constraints = constraints.setGridX(1)
                 .setGridWidth(GridBagConstraints.REMAINDER);
@@ -155,7 +155,7 @@ public class MainForm extends JFrame {
     }
 
     private ArrayList<SelectionButtons> selectionButtons
-            =new ArrayList<>();
+            = new ArrayList<>();
 
     public SelectionButtons[] getSelectionButtons() {
         return selectionButtons.toArray(new SelectionButtons[0]);
@@ -189,11 +189,15 @@ public class MainForm extends JFrame {
     {
         for (var i : textFields.values())
             i.setStatus(" ");
+
+        for (var i : this.getSelectionButtons()) {
+                i.setStatus(" ");
+        }
     }
 
-    public JFormattedTextField createField(String name, JPanel panel) {
+    public JFormattedTextField createField(String name, JPanel panel, String validationMessage) {
         var labelAndInput = new LabelAndInput(name,
-                this.formatters.getFormatterForType(name));
+                this.formatters.getFormatterForType(name), validationMessage);
 
         textFields.put(name, labelAndInput);
 

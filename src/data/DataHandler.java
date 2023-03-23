@@ -56,34 +56,31 @@ public class DataHandler {
         });
     }
 
-
     public boolean validateFields() {
+        boolean isErrorable = true;
 
-        if (StringUtils.isEmpty(this.form.getNameField().getActualText())) {
-            form.getFieldGroup("Name").setStatus("Name can't be empty!");
-            return false;
+        if (!form.getNameField().validateInput()){
+            isErrorable =  false;
         }
 
-        if (StringUtils.isEmpty(this.form.getAddressField().getActualText())) {
-            form.getFieldGroup("Address").setStatus("Address can't be empty!");
-            return false;
+        if (!form.getPhoneField().validateInput()){
+            isErrorable =  false;
         }
 
-        if (StringUtils.isEmpty(this.form.getPhoneField().getActualText())) {
-            form.getFieldGroup("Phone").setStatus("Phone number cannot be empty!");
-            return false;
+        if (!form.getAddressField().validateInput()){
+            isErrorable =  false;
         }
 
         for (var i : form.getSelectionButtons()) {
             if (i.checkedCount() < i.getRequiredChecked())
             {
-                form.getFieldGroup("Address").setStatus("You need at least " + i.checkedCount() + " selected " + i.getName().toLowerCase() + "!");
-                return false;
+                i.setStatus("Select one!");
+                isErrorable = false;
             }
         }
 
 
-        return true;
+        return isErrorable;
     }
 
     public void fillData(Order order) {

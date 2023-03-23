@@ -26,8 +26,7 @@ public class IncrementButton implements ActionListener {
         mainForm.setUpdateMode(false, 0);
     }
 
-    void handleAdd(Order order)
-    {
+    boolean handleAdd(Order order) {
         var validationResult = mainForm.getDataHandler().validateFields();
         if (!validationResult) {
        /*     JOptionPane.showMessageDialog(mainForm,
@@ -36,25 +35,28 @@ public class IncrementButton implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
 
         */
-            return;
+            return false;
         }
 
         tableModel.addRow(order);
-
+        return true;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         mainForm.clearValidationErrors();
-        var order = mainForm.getDataHandler().getOrderFromFields();
+
+        var order = mainForm.getDataHandler()
+                .getOrderFromFields();
 
         if (mainForm.isUpdateMode()) {
             handleUpdate(order);
         } else {
-            handleAdd(order);
+            if (!handleAdd(order)) {
+                return;
+            }
         }
 
-        // Always clear.
         mainForm.getDataHandler().fillData(new Order());
     }
 }

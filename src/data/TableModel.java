@@ -1,5 +1,7 @@
 package data;
 
+import com.formdev.flatlaf.util.StringUtils;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
@@ -68,8 +70,7 @@ public class TableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         var selectedOrder = orders.get(rowIndex);
-        switch (columnIndex)
-        {
+        switch (columnIndex) {
             case 0:
                 return selectedOrder.getName();
             case 1:
@@ -79,7 +80,8 @@ public class TableModel extends AbstractTableModel {
             case 3:
                 return selectedOrder.getSize();
             case 4:
-                return selectedOrder.getToppings();
+                return StringUtils.isEmpty(selectedOrder.getToppings()) ? "<none>" :
+                        selectedOrder.getToppings();
             case 5:
                 return selectedOrder.getStyle();
         }

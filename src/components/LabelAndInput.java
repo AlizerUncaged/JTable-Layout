@@ -1,5 +1,8 @@
 package components;
 
+import com.formdev.flatlaf.util.StringUtils;
+import interactions.KeyValidationListener;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -20,6 +23,12 @@ public class LabelAndInput extends JPanel {
     private JFormattedTextField textField;
     private String name;
     private MaskFormatter formatter;
+
+    public String getValidationErrorText() {
+        return validationErrorText;
+    }
+
+    private String validationErrorText;
 
     /**
      * Gets the label component.
@@ -58,9 +67,10 @@ public class LabelAndInput extends JPanel {
      *
      * @param name the name for the label component
      */
-    public LabelAndInput(String name, MaskFormatter formatter) {
+    public LabelAndInput(String name, MaskFormatter formatter, String validationErrorText) {
         this.name = name;
         this.formatter = formatter;
+        this.validationErrorText = validationErrorText;
 
         // Create a new label and flow layout for the panel
         innerPanel = new JPanel();
@@ -89,12 +99,22 @@ public class LabelAndInput extends JPanel {
         return formatter;
     }
 
+    public boolean validateInput() {
+        if (StringUtils.isEmpty(getActualText())) {
+            setStatus(validationErrorText);
+            return false;
+        }
+        setStatus(" ");
+        return true;
+    }
+
     /**
      * Renders the text field component and adds it to the panel.
      */
     void renderField() {
         // Create a new text field and set its size
         textField = new JFormattedTextField(formatter);
+        textField.addKeyListener(new KeyValidationListener(this));
         textField.setFocusLostBehavior(JFormattedTextField.COMMIT);
         textField.setColumns(15);
         // Add the text field to the panel

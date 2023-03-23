@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RegistrationForm:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RegistrationForm_jar</output-path>
+    <root id="archive" name="RegistrationForm.jar">
+      <element id="module-output" name="RegistrationForm" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/flatlaf-2.6.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
